@@ -103,12 +103,19 @@
         let index = 0;
         let current = this.head;
         let previous = null;
-        while (index++ < position) {
-          previous = current;
-          current = current.next;
+        // ** 其实这里缺少一个步骤, 就是判定删除的位置是不是第一个节点, 如果是, 需要将head指针指向它
+        if (position === 0) {
+          this.head = current.next
+        } else {
+          while (index++ < position) {
+            previous = current;
+            current = current.next;
+          }
+
+          previous.next = current.next
         }
 
-        previous.next = current.next
+
         this.length--;
         return current.element
       }
@@ -162,16 +169,17 @@
 
     console.log(list.removeAt(1)); // 被移除节点的值
     console.log(list.removeAt(3));
+    console.log(list.removeAt(0));
     console.log(list); // 打印节点移除后的链表
 
-    list.upload(1, "woshixinlaide");
-    console.log(list); // 打印指定节点修改后的链表
+    // list.upload(1, "woshixinlaide");
+    // console.log(list); // 打印指定节点修改后的链表
 
-    list.remove("budai");
-    console.log(list);
+    // list.remove("budai");
+    // console.log(list);
 
-    console.log(list.isEmpty());
-    console.log(list.size());
+    // console.log(list.isEmpty());
+    // console.log(list.size());
 
   </script>
 </body>

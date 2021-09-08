@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 首先是封装一个节点
+    class Node {
+      constructor(element) {
+        this.prev = null;
+        this.next = null;
+        this.element = element
+      }
+    }
+
+    // 封装一个双向链表
+    class DoubleList {
+      constructor() {
+        this.head = null;
+        this.tail = null;
+        this.length = 0
+      };
+
+      // 1. append(element): 在链表尾部添加一个节点 
+      append(element) {
+        // 创建一个新节点
+        const node = new Node(element);
+        // 判断链表中是否已存在节点
+        if (!this.head) {
+          this.head = node;
+          this.tail = node
+        } else {
+          // 链表中已经存在节点， 我们要找到最后一个节点(可以使用current.next, 或者是使用 this.tail)
+          // 目前this.tail 就是链表中的最后一个节点
+          this.tail.next = node;
+          node.prev = this.tail;
+          this.tail = node
+        }
+
+        this.length++
+      }
+
+
+      // 2. insert(position, element): 在指定位置插入一个新的节点
+      insert(position, element) {
+        // 判断是否越界
+        if (position < 0 || position > this.length) return false
+
+        // 创建一个新的节点
+        const node = new Node(element);
+
+        // 在指定位置插入节点
+        // 由于要指定 head 以及 tail 的指向, 所以要考虑插入位置的问题
+        if (position === 0) {
+          // 插入到第一个位置, 此时的head是原本第一个节点
+          this.head.prev = node;
+          node.next = this.head;
+          this.head = node
+        } else if (position === this.length) {
+          // 直接插入到链表的最后一个位置
+          this.tail.next = node;
+          node.prev = this.tail;
+          this.tail = node
+        } else {
+          // 单纯的插入到链表中间某个地方
+          let index = 0;
+          let current = this.head;
+          let previous = null;
+          // 开始寻找指定位置
+          while (index++ < position) {
+            previous = current;
+            current = current.next;
+          }
+          previous.next = node;
+          current.prev = node;
+          node.prev = previous;
+          node.next = current
+        }
+
+        this.length++;
+      }
+
+      // 3. get(position): 获取指定位置的节点
+      get(position) {
+        // 先判断是否越界
+        if (position < 0 || position > this.length - 1) return false
+        // 寻找位置对应的节点
+        let index = 0;
+        let current = this.head;
+        while (index++ < position) {
+          current = current.next
+        }
+
+        return current.element
+      }
+
+      // 4. indexOf(element): 获取指定节点的索引值
+      indexOf(element) {
+        let index = 0;
+        let current = this.head;
+        let isIn;
+        while (index < this.length) {
+          isIn = false;
+          if (current.element === element) {
+            isIn = true;
+            return index
+          }
+          current = current.next;
+          index++
+        }
+        if (!isIn) return -1
+      }
+
+      // 5. removeAt(position): 移除指定位置的节点
+      removeAt(position) {
+        // 首先是判断是否越界
+        if (position < 0 || position > this.length - 1) return null
+        // 判断一下删除的位置, 需要修改 head, tail指针的指向
+        let current = this.head;
+        if (position === 0) {
+          // 删除第一个节点
+          current.prev = null;
+          this.head = current.next
+        } else if (position == this.length - 1) {
+          // 删除最后一个节点
+          current = this.tail;
+          current.prev.next = null;
+          this.tail = current.prev;
+        } else {
+          // 删除中间的节点
+          let index = 0;
+          let previous = null;
+          current = this.head;
+          while (index++ < position) {
+            previous = current;
+            current = current.next;
+            // index++
+          }
+          previous.next = current.next;
+          current.next.prev = previous
+        }
+
+        this.length--
+        return current.element
+      }
+
+      // 6. update(position, element): 更新指定的节点
+      update(position, element) {
+        this.removeAt(position);
+        this.insert(position, element)
+      }
+
+      // 7. remove(element): 移除匹配的节点
+      remove(element) {
+        let index = this.indexOf(element);
+        if (index === -1) return null
+        console.log(this.removeAt(index));
+      }
+
+      // 8. isEmpty(): 链表是否为空
+      isEmpty() {
+        return this.length === 0
+      }
+
+      // 9. size(): 链表长度
+      size() {
+        return this.length
+      }
+    }
+
+    const list = new DoubleList();
+
+    list.append("shuosuo");
+    list.append("areha");
+    list.append("shuowang");
+    list.append("budai");
+    console.log(list);  // 打印链表
+
+    list.insert(0, "woshixinlaide"); // 插入到第一个
+    list.insert(5, "woshizuihouyige");  // 插入到最后一个
+    list.insert(3, "nihaoa"); // 在链表中间插入一个节点 
+    console.log(list);
+
+    console.log(list.get(3)); // 获取指定位置的节点
+    console.log(list.get(2)); // 获取指定位置的节点
+
+    console.log(list.indexOf("woshizuihouyige")); // 获取最后一个节点的位置
+    console.log(list.indexOf("nihaoa"));
+    console.log(list.indexOf("woshixinlaide")); // 获取第一个
+    console.log(list.indexOf("wobushizhilide")); // 获取一个不存在的节点的位置
+
+    console.log(list.removeAt(0)); // 删除第一个节点
+    console.log(list.removeAt(5)); // 删除最后一个节点
+    console.log(list.removeAt(1)); // 删除中间的节点
+    console.log(list);
+
+    list.update(0, "woshidiygema"); // 更新第一个节点
+    list.update(3, "woshizuihouyigema"); // 更新第一个节点
+    console.log(list);
+
+    list.remove("woshidiygema"); // 移除第一个
+    console.log(list);
+
+    console.log(list.isEmpty());
+    console.log(list.size());
+
+
+
+
+  </script>
+</body>
+
+</html>
