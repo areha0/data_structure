@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 1. 首先是封装一个节点
+    class Node {
+      constructor(element) {
+        this.element = element;
+        this.next = null
+      }
+    };
+
+    // 2. 封装一个链表结构
+    class LinkList {
+      // 创建的列表实例应具有的属性是
+      constructor() {
+        this.head = null;
+        this.length = 0
+      }
+
+      // 下面开始封装链表的方法
+      // 1. append(element): 在链表后端添加一个节点
+      append(element) {
+        // 根据内容生成一个节点
+        const node = new Node(element);
+
+        // 判断列表中是否有节点, 如果没有, 直接将head指向自己, 如果有, 找到最后一个节点指向自己
+        // 判断的方法还可以是: if(!this.head)
+        if (this.length === 0) {
+          this.head = node
+        } else {
+          // 找到最后一个节点: 判断节点是否有next指向
+          let current = this.head;
+          while (current.next) {
+            current = current.next
+          }
+
+          current.next = node;
+        }
+        this.length++
+      }
+
+      // 2. insert(position, element): 根据位置插入节点
+      insert(position, element) {
+        // 先判断插入的位置是否越界
+        if (position < 0 || position > this.length) return false
+        // 查找位置, 找到位置的上一个节点和当前节点, 使上一个节点指向新的节点, 新的节点指向当前节点
+        let index = 0;
+        let previous = null;
+        let current = this.head;
+        while (index++ < position) {
+          previous = current;
+          current = current.next
+        }
+        // 创建一个新节点
+        const node = new Node(element);
+        previous.next = node;
+        node.next = current;
+
+        this.length++
+      }
+
+      // 3. get(position): 获取该位置处节点的element
+      get(position) {
+        // 依然是先判断是否越界
+        if (position < 0 || position > this.length - 1) return null
+        let index = 0;
+        let current = this.head;
+        while (index++ < position) {
+          current = current.next
+        }
+
+        return current.element
+      }
+
+      // 4. indexOf(element): 获取指定节点的索引值
+      indexOf(element) {
+        let current = this.head;
+        let index = 0;
+        // 或者此处的判定条件是: if(current)
+        while (index++ < this.length) {
+          if (current.element == element) {
+            return index
+          }
+          current = current.next;
+        }
+        return -1
+      }
+
+      // 5. removeAt(position): 根据位置移除某一项
+      // 思路: 获取当前位置的前一个节点, 和当前位置的后一个节点, 使前一个节点指向后一个节点
+      removeAt(position) {
+        // 这里依然要判断是否越界
+        if (position < 0 || position > this.length - 1) return false
+        let index = 0;
+        let current = this.head;
+        let previous = null;
+        while (index++ < position) {
+          previous = current;
+          current = current.next;
+        }
+
+        previous.next = current.next
+        this.length--;
+        return current.element
+      }
+
+      // 6. upload(position, element): 修改某一位置的节点
+      // 思路, 先移除该位置原有的节点, 再在该位置添加一个新的节点
+      upload(position, element) {
+        this.removeAt(position);
+        this.insert(position, element);
+      }
+
+      // 7. remove(element): 根据值移除链表中的一个节点
+      // 思路: 先找到响应的节点位置, 再根据位置移除
+      remove(element) {
+        let position = this.indexOf(element);
+
+        console.log(this.removeAt(position));
+      }
+
+      // 8. isEmpty(): 判断是否为空
+      isEmpty() {
+        return this.length === 0
+      }
+
+      // 9. size(): 链表的长度
+      size() {
+        return this.length
+      }
+    }
+
+
+    // 创建一个列表
+    const list = new LinkList();
+    list.append("shuosuo");
+    list.append("areha");
+    list.append("shuowang");
+    list.append("budai")
+    console.log(list);  // 打印尾部加入的节点
+
+    list.insert(1, "nihaoa");
+    list.insert(3, "woyehenhao")
+    console.log(list.insert(10, "wochucuol"));  // 越界报错
+    console.log(list);  // 打印插入的节点
+
+    console.log(list.get(1)); // 获取指定节点的element
+    console.log(list.get(3));
+
+    console.log(list.indexOf("nihaoa")); // 获取指定节点的索引值
+    console.log(list.indexOf("shuowang"));
+    console.log(list.indexOf("shuowa"));
+
+    console.log(list.removeAt(1)); // 被移除节点的值
+    console.log(list.removeAt(3));
+    console.log(list); // 打印节点移除后的链表
+
+    list.upload(1, "woshixinlaide");
+    console.log(list); // 打印指定节点修改后的链表
+
+    list.remove("budai");
+    console.log(list);
+
+    console.log(list.isEmpty());
+    console.log(list.size());
+
+
+
+  </script>
+</body>
+
+</html>
