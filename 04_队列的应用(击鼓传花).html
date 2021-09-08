@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 需求: 给定一个序列, 从0数到2, 数到2的人淘汰, 依次循环, 直至剩下最后一个人
+    // 1. 首先是引入封装好的队列
+    class Queue {
+      constructor() {
+        this.item = []
+      };
+      push(value) {
+        this.item.push(value)
+      };
+      shift() {
+        this.item.shift()
+      }
+      peek() {
+        if (!this.isEmpty()) return this.item[0];
+        return null
+      };
+      isEmpty() {
+        return this.item.length === 0
+      };
+      size() {
+        return this.item.length
+      }
+    }
+
+    // 2. 再封装一个实现功能的函数, 可以传入一个序列, 可以传入一个规定的数字
+    // 封装函数的思路: 将数值不是2的参数, 先从队列的头部弹出, 然后再从队列的尾部加入; 如果数值是2, 直接弹出, 不再加进队列
+    // 如此, 一直循环到只剩最后一个
+    function victory(itemList, num) {
+      // 创建一个可以使用的队列
+      const queue = new Queue();
+      queue.item = itemList;
+      // 开始循环
+      while (queue.size() > 1) {
+        // 如果, num是3的话,那就是只循环2次, 从头部取出, 同时从尾部进入
+        for (let i = 0; i < num - 1; i++) {
+          queue.push(queue.peek()); // 将队头元素加入队尾
+          queue.shift(); // 将对头元素删除
+        }
+        // 循环 num-1 次之后, 删除掉第一个元素
+        queue.shift()
+        // console.log(queue);
+      }
+
+      console.log(queue.item);
+      console.log(queue.peek());
+    }
+
+    victory(["shuosuo", "areha", "shuowang", "budai"], 3)
+  </script>
+</body>
+
+</html>

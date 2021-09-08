@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class Stack {
+      constructor() {
+        this.item = []
+      };
+      push(value) {
+        this.item.push(value)
+      };
+      pop() {
+        this.item.pop()
+      };
+      peek() {
+        if (!this.isEmpty()) return this.item[this.item.length - 1];
+        return null
+      };
+      isEmpty() {
+        return this.item.length == 0
+      }
+      size() {
+        return this.item.length
+      }
+    }
+
+    // 思路: 输入一个数值, 除2取余数  -- 将余数依次压入栈; 直到比2小, 最后将栈所有数据弹出
+    // 封装一个函数
+    function decimal2binary(num) {
+      // 1. 创建一个栈结构
+      const remainder = new Stack();
+      let binaryString = "";
+      // 对num取余数进行循环
+      while (num > 0) {
+        // 将余数压入栈
+        remainder.push(num % 2);
+        // 修改当前num值
+        num = Math.floor(num / 2)
+      };
+      // return remainder.item
+      while (!remainder.isEmpty()) {
+        binaryString += remainder.peek();
+        remainder.pop()
+      }
+      return binaryString
+    }
+    console.log(decimal2binary(4));
+    console.log(decimal2binary(100));
+    console.log(decimal2binary(1000));
+
+  </script>
+</body>
+
+</html>

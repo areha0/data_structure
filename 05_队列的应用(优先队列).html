@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 需求, 现在队列中的元素不仅有参数, 还有一个优先级数值, 数值越低, 优先级越高
+    // 1. 还是先引入封装好的队列
+    class Queue {
+      constructor() {
+        this.item = []
+      };
+      push(value, prority) {
+        this.item.push(value)
+      };
+      shift() {
+        this.item.shift()
+      }
+      peek() {
+        if (!this.isEmpty()) return this.item[0];
+        return null
+      };
+      isEmpty() {
+        return this.item.length === 0
+      };
+      size() {
+        return this.item.length
+      }
+    };
+
+    // 一个封装带有优先级元素的类
+    class QueueElement {
+      constructor(value, prority) {
+        this.value = value;
+        this.prority = prority
+      }
+    }
+
+    // 一个关于优先级的队列: 继承自普通的队列
+    class ProrityQueue extends Queue {
+      enqueue(value, prority) {
+        const queueitem = new QueueElement(value, prority);
+
+        if (this.isEmpty()) {
+          this.push(queueitem)
+        } else {
+          let last = true;
+          for (let i = 0; i < this.size(); i++) {
+            if (this.item[i].prority > prority) {
+              this.item.splice(i, 0, queueitem);
+              last = false
+              break;
+            }
+          }
+          if (last) this.push(queueitem)
+        }
+
+      }
+    }
+
+    const prorityQueue = new ProrityQueue();
+    prorityQueue.enqueue("shuosuo", 120);
+    prorityQueue.enqueue("areha", 100);
+    prorityQueue.enqueue("shuowang", 200);
+    prorityQueue.enqueue("nihaoa", 60);
+
+    console.log(prorityQueue);
+
+
+  </script>
+</body>
+
+</html>

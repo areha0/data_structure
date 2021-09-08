@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 栈的特点是: 后入先出
+    // 栈的实现方式有两种: 数组和链表, 我们这里使用数组对栈结构进行实现
+    class Stack {
+      // 构造函数: 创建实例时, 在实例内部创建一个item属性 -- 是一个空数组
+      constructor() {
+        this.item = []
+      };
+      // 1. 入栈
+      push(value) {
+        this.item.push(value)
+      };
+      // 2. 出栈
+      pop() {
+        this.item.pop()
+      };
+      // 3. 观察栈顶的参数
+      peek() {
+        if (!this.isEmpty()) return this.item[this.item.length - 1];
+        return null
+      };
+      // 4. 判断栈结构是否为空
+      isEmpty() {
+        return this.item.length == 0
+      }
+      // 5. 判断栈结构的长度
+      size() {
+        return this.item.length
+      }
+    }
+
+    // 创建栈实例对象
+    const stack = new Stack();
+    stack.item = ["shuosuo", "areha", "shuowang", "nihaoa"]
+
+    stack.push("woshixilaide");
+    console.log(stack.item);
+    stack.pop()
+    console.log(stack.item);
+    console.log(stack.peek());
+    console.log(stack.isEmpty());
+    console.log(stack.size());
+
+  </script>
+</body>
+
+</html>
