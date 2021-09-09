@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 哈希表封装的思路: 
+    // 首先是哈希函数的封装: 通过关键字, 和哈希表的最大限度求出关键字在哈希表中对应的哈希值(索引值)
+    // 然后是将关键字按照索引值插入到哈希表中(插入过程中要注意的是每个索引值对应的应该是一个数组)
+
+    // 一. 哈希函数
+    function hashFunc(key, limit) {
+      let hashCode = 0;
+      for (let i = 0; i < key.length; i++) {
+        // hashCode的计算方法是 a*n^3 + b*n^2 + c*n + d
+        //  => ( (a*n + b)n + c )n + d
+        // n 就是 limit
+        hashCode = limit * hashCode + key[i].charCodeAt();
+      }
+      // console.log(hashCode);
+      return hashCode;
+    }
+
+    // 二. 封装哈希表
+    // 思路: 传入要装入哈希表的键值对 (key, value), 根据哈希函数得到键值的HashCode,
+    // 根据hashCode, 求得键值对需要存放的索引位置
+    // 在索引位置处插入一个数组, 然后将符合该索引位置的键值对放入相应的数组
+    class HashTable {
+      constructor() {
+        // 哈希表的默认数据, 我们设置哈希数组长度为8
+        // 哈希表为一个空数组, 便于后续的操作
+        this.limit = 8;
+        this.count = 0;
+        this.hash_table = [];
+      };
+      // 1. insert(key, value): 插入键值对
+      insert(key, value) {
+        // 调用HashFunc, 获取HashCode
+        let hash_code = hashFunc(key, this.limit);
+        // console.log(hash_code);
+        // 获取键值对应的索引值
+        let index = hash_code % this.limit;
+        // console.log(index);
+        let bucket = this.hash_table[index];
+
+        // 如果该索引值处不存在数据, 直接将键值对添加到相应索引的数组中
+        if (!bucket) {
+          bucket = [];
+          bucket.push([key, value])
+        } else {
+          // 该索引值处已存在数据: 我们需要判断该键值是否已经存在, 如果存在, 就替换掉存在的
+          for (let item of bucket) {
+            if (item[0] == key) {
+              item[1] = value;
+              console.log([key, value]);
+              return
+            }
+          }
+          bucket.push([key, value]);
+        }
+
+        this.hash_table[index] = bucket;
+        this.count++
+      }
+
+      // 2. get(key): 根据键获取对应的数值
+      get(key) {
+        // 首先是获取键所对应的hashCode, 根据hashCode获取index
+        let hash_code = hashFunc(key, this.limit);
+        let index = hash_code % this.limit;
+        // console.log(index);
+        let bucket = this.hash_table[index];
+        // 判断该索引下数组是否为空
+        if (!bucket) return null
+        for (let item of bucket) {
+          if (item[0] == key) {
+            return item[1]
+          }
+        }
+        return null
+      }
+
+      // 3. remove(key): 根据键值移除对应的键值对
+      remove(key) {
+        let hash_code = hashFunc(key, this.limit);
+        let index = hash_code % this.limit;
+
+        let bucket = this.hash_table[index];
+        if (!bucket) return null
+        for (let i = 0; i < bucket.length; i++) {
+          if (bucket[i][0] === key) {
+            let value = bucket[i][1];
+            bucket.splice(i, 1);
+            this.count--;
+            return value
+          }
+        }
+        return null
+      }
+
+      // 4. isEmpty(): 判断哈希表是否为空
+      isEmpty() {
+        return this.count === 0
+      }
+
+      // 5. size(): 哈希表的长度
+      size() {
+        return this.count
+      }
+    }
+
+    const hash = new HashTable();
+    hash.insert("name", "shuosuo");
+    hash.insert("age", 18);
+    hash.insert("height", 188);
+    hash.insert("agend", "male"); // 添加键值对
+    hash.insert("name", "areha") // 修改键值对
+    console.log(hash);
+
+    console.log(hash.get("name"));
+    console.log(hash.get("school")); // 查询不存在的值
+
+    console.log(hash.remove("height")); // 删除键值对
+    console.log(hash.remove("nihaoa")); // 删除不存在的值
+    console.log(hash);
+
+    console.log(hash.isEmpty());
+    console.log(hash.size());
+
+
+  </script>
+</body>
+
+</html>
