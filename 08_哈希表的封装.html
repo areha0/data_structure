@@ -35,9 +35,11 @@
       constructor() {
         // 哈希表的默认数据, 我们设置哈希数组长度为8
         // 哈希表为一个空数组, 便于后续的操作
-        this.limit = 8;
-        this.count = 0;
         this.hash_table = [];
+        this.limit = 7;
+        this.count = 0;
+        this.max_loadFactor = 0.75;
+        this.min_loadFactor = 0.25;
       };
       // 1. insert(key, value): 插入键值对
       insert(key, value) {
@@ -66,7 +68,11 @@
         }
 
         this.hash_table[index] = bucket;
-        this.count++
+        this.count++;
+        if (this.count / this.limit > this.max_loadFactor) {
+          this.limit = this.getPrime(this.limit * 2)
+          this.resize()
+        }
       }
 
       // 2. get(key): 根据键获取对应的数值
@@ -98,6 +104,12 @@
             let value = bucket[i][1];
             bucket.splice(i, 1);
             this.count--;
+            // 在这里也要重新判断一下是否当前的元素个数小于最小阈值, 然后缩小哈希表的长度
+            if (this.count / this.limit < this.min_loadFactor) {
+              const half = Math.ceil(this.limit / 2);
+              this.limit = this.getPrime(half);
+              this.resize()
+            }
             return value
           }
         }
@@ -113,25 +125,78 @@
       size() {
         return this.count
       }
+
+      // 6. resize()哈希表的扩容(当添加的元素大于某个阈值时, 对哈希表长度进行扩展; 当删除的元素小于某个阈值时, 对哈希表的长度进行缩减)
+      resize() {
+        // 扩容的关键在于将原来哈希表中存放的所有键值对, 都要一个一个将其转移到扩容后的哈希表中
+        let newTable = this.hash_table;
+        this.hash_table = [];
+        this.count = 0;
+        for (let bucket of newTable) {
+          if (!bucket) continue
+          for (let item of bucket) {
+            this.insert(item[0], item[1])
+          }
+        }
+      }
+
+      // 7. isPrime(num): 判断是否为质数, 将哈希表的长度设置为质数可以很好地将元素均匀分布
+      isPrime(num) {
+        for (let i = 2; i < Math.ceil(Math.sqrt(num)) + 1; i++) {
+          if (num % i === 0) return false
+        }
+        return true
+      }
+
+      // 8. getPrime(num): 获取质数
+      getPrime(num) {
+        // 如果直接本身就是质数, 那么就是直接返回
+        if (this.isPrime(num)) return num
+        // 如果不是, 那就找比自己大的一个质数
+        while (!this.isPrime(num)) {
+          num++
+        }
+        return num
+      }
+
     }
 
+    // const hash = new HashTable();
+    // hash.insert("name", "shuosuo");
+    // hash.insert("age", 18);
+    // hash.insert("height", 188);
+    // hash.insert("agend", "male"); // 添加键值对
+    // hash.insert("name", "areha") // 修改键值对
+    // console.log(hash);
+
+    // console.log(hash.get("name"));
+    // console.log(hash.get("school")); // 查询不存在的值
+
+    // console.log(hash.remove("height")); // 删除键值对
+    // console.log(hash.remove("nihaoa")); // 删除不存在的值
+    // console.log(hash);
+
+    // console.log(hash.isEmpty());
+    // console.log(hash.size());
+
+    // 测试哈希表的扩容
     const hash = new HashTable();
-    hash.insert("name", "shuosuo");
-    hash.insert("age", 18);
-    hash.insert("height", 188);
-    hash.insert("agend", "male"); // 添加键值对
-    hash.insert("name", "areha") // 修改键值对
+    hash.insert("aaa", 111);
+    hash.insert("bbb", 111);
+    hash.insert("ccc", 111);
+    hash.insert("shuo", 111);
+    hash.insert("shi", 111);
+    console.log(hash);
+    hash.insert("fff", 111);
+    hash.insert("name", 222);
+    console.log(hash);
+    // 开始判断哈希表的缩小
+    console.log(hash.remove("aaa"));
+    console.log(hash.remove("bbb"));
+    console.log(hash.remove("ccc"));
+    console.log(hash.remove("name"));
     console.log(hash);
 
-    console.log(hash.get("name"));
-    console.log(hash.get("school")); // 查询不存在的值
-
-    console.log(hash.remove("height")); // 删除键值对
-    console.log(hash.remove("nihaoa")); // 删除不存在的值
-    console.log(hash);
-
-    console.log(hash.isEmpty());
-    console.log(hash.size());
 
 
   </script>
