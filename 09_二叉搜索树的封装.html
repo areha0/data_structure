@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 首先对节点进行封装: 每个树节点包含有: 数值, 左子节点指向, 右子节点指向
+    class Node {
+      constructor(value) {
+        this.left = null;
+        this.value = value;
+        this.right = null
+      }
+    }
+
+    // 搜索二叉树的封装
+    class BinaryTree {
+      constructor() {
+        this.root = null
+      }
+
+      // 1. insert(key): 二叉树中插入节点
+      insert(key) {
+        // 创建新的节点
+        let newNode = new Node(key);
+        if (!this.root) {
+          this.root = newNode;
+        } else {
+          this.insertNode(this.root, key)
+        }
+      }
+
+      // 递归插入节点
+      insertNode(node, key) {
+        let newNode = new Node(key);
+        if (node.value > key) {
+          // 插入的数据小于节点值
+          if (!node.left) {
+            node.left = newNode
+          } else {
+            this.insertNode(node.left, key)
+          }
+        } else if (node.value < key) {
+          // 插入的数据大于节点值
+          if (!node.right) {
+            node.right = newNode
+          } else {
+            this.insertNode(node.right, key)
+          }
+        }
+      }
+
+      // 2. 遍历二叉树中的所有节点
+      // 2.1 先序遍历: 遍历根, 左子树, 右子树
+      preOrderList() {
+        this.preOrderListNode(this.root);
+      };
+
+      preOrderListNode(node) {
+        if (!node) return
+        console.log(node.value);
+        this.preOrderListNode(node.left);
+        this.preOrderListNode(node.right)
+      }
+
+      // 2.2 中序遍历: 遍历左子树, 根, 右子树
+      medOrderList() {
+        this.medOrderListNode(this.root)
+      }
+
+      medOrderListNode(node) {
+        if (!node) return
+        this.medOrderListNode(node.left);
+        console.log(node.value);
+        this.medOrderListNode(node.right)
+      }
+
+      // 2.3 后续遍历, 后序遍历其左子树, 遍历子节点,后序遍历其右子树
+      lastOrderList() {
+        this.lastOrderListNode(this.root)
+      }
+
+      lastOrderListNode(node) {
+        if (!node) return
+        this.lastOrderListNode(node.left);
+        this.lastOrderListNode(node.right);
+        console.log(node.value);
+      }
+
+      // 3. max(): 最大值, 二叉树的最大值其实就是一直往右边找
+      max() {
+        let node = this.root;
+        while (node.right) {
+          node = node.right;
+        }
+        return node.value
+      }
+
+      // 4. min(): 最小值, 二叉树的最小值其实就是一直往左边找
+      min() {
+        let node = this.root;
+        while (node.left) {
+          node = node.left;
+        }
+        return node.value
+      }
+
+      // 5. search(key): 搜索二叉树中是否存在该元素
+      search(key) {
+        return this.searchNode(this.root, key)
+      }
+
+      searchNode(node, key) {
+        if (!node) return false
+        if (node.value > key) {
+          // ** 注意: 这里再递归调用时, 也要将递归调用的结果进行返回
+          return this.searchNode(node.left, key)
+        } else if (node.value < key) {
+          return this.searchNode(node.right, key)
+        } else {
+          return true
+        }
+      }
+
+      // 递归调用函数一般都可以使用 while 循环进行替代
+      // search2(key): 使用循环实现的搜索
+      search2(key) {
+        let node = this.root;
+        while (node) {
+          if (node.value > key) {
+            node = node.left
+          } else if (node.value < key) {
+            node = node.right
+          } else {
+            return true
+          }
+        }
+        return false
+      }
+
+    }
+
+    let bst = new BinaryTree();
+    bst.insert(11);
+    bst.insert(7);
+    bst.insert(15);
+    bst.insert(5);
+    bst.insert(3);
+    bst.insert(9);
+    bst.insert(8);
+    bst.insert(10);
+    bst.insert(13);
+    bst.insert(12);
+    bst.insert(14);
+    bst.insert(20);
+    bst.insert(18);
+    bst.insert(25);
+    bst.insert(6);
+    console.log(bst);
+    // bst.preOrderList(); // 先序遍历
+    // bst.medOrderList(); // 中序遍历
+    // bst.lastOrderList(); // 后序遍历
+
+    console.log(bst.max()); // 二叉树中的最大值
+    console.log(bst.min()); // 二叉树中的最小值
+
+    // console.log(bst.search(30)); 
+    // console.log(bst.search(25)); // 递归函数实现二叉树的搜索
+    console.log(bst.search2(30));
+    console.log(bst.search2(25)); // while循环实现二叉树的搜索
+  </script>
+</body>
+
+</html>
