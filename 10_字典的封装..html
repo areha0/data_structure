@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 封装一个字典, 用于表示图的边
+    // 字典其实就是一个map, 里面是键值对
+    class Dictory {
+      constructor() {
+        this.item = {}
+      };
+      // 1. 添加键值对
+      add(key, value) {
+        this.item[key] = value
+      }
+      // 2. 查找是否含有某键
+      has(key) {
+        return this.item.hasOwnProperty(key)
+      }
+      // 3. 从字典中移除某属性
+      remove(key) {
+        if (!this.has(key)) return false
+        delete this.item[key];
+        return true
+      }
+    }
+
+    let dict = new Dictory();
+    dict.add("name", "shuosuo");
+    console.log(dict);
+    console.log(dict.has("name"));
+    console.log(dict.remove("age"));
+  </script>
+</body>
+
+</html>
