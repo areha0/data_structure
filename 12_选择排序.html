@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 选择排序算法
+    // 思路: 先将第一个数据与其他数据进行比较, 将最小值与第一个元素进行交换, 
+    // 然后将第二个数据与后面的数据进行比较, 将最小值与第二个元素进行比较
+    // 如此一直只剩下最后一个元素
+    // 比较次数为O(n²)
+    // 交换次数为O(n)
+    function selectSort(array) {
+      const length = array.length;
+
+      for (let j = 0; j < length - 1; j++) {
+        let min = j;
+        for (let i = min + 1; i < length; i++) {
+          if (array[min] > array[i]) {
+            min = i
+          }
+        }
+        if (array[j] !== array[min]) {
+          let temp = array[j];
+          array[j] = array[min];
+          array[min] = temp;
+        }
+      }
+      // return array
+    }
+
+    let testArr = [15, 23, 12, 24, 12, 9, 8, 56, 12, 12, 45];
+    selectSort(testArr);
+    console.log(testArr);
+
+  </script>
+</body>
+
+</html>
