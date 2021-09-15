@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 简单的排序方法: 冒泡排序, 选择排序, 插入排序
+    // 插入排序是简单排序方法中性能最高的
+    // 插入排序的比较复杂度为O(n²), 但是最高复杂度要比冒泡排序和选择排序少一半
+    // 思路: 首先找一个局部有序部分, 然后将该有序部分右侧的数据逐一为左侧有序部分进行比较, 如果小于有序部分中的某值
+    // 则插入其前部
+
+    function insertSort(array) {
+      const length = array.length;
+      for (let i = 1; i < length; i++) {
+        const current = array[i];
+        let min = i;
+        // 1. 最开始的局部有序数组其实就是 第一个数据
+        // 2. 如果大于有序序列的某值, 我们需要将有序序列中的值进行右移
+        while (array[min - 1] > current && min > 0) {
+          array[min] = array[min - 1];
+          min--
+        }
+        array[min] = current
+      }
+    }
+    let testArr = [15, 23, 12, 24, 12, 9, 8, 56, 12, 12, 45];
+    insertSort(testArr);
+    console.log(testArr);
+  </script>
+</body>
+
+</html>
