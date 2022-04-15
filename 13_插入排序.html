@@ -18,16 +18,27 @@
 
     function insertSort(array) {
       const length = array.length;
+      // for (let i = 1; i < length; i++) {
+      //   const current = array[i];
+      //   let min = i;
+      //   // 1. 最开始的局部有序数组其实就是 第一个数据
+      //   // 2. 如果大于有序序列的某值, 我们需要将有序序列中的值进行右移
+      //   while (array[min - 1] > current && min > 0) {
+      //     array[min] = array[min - 1];
+      //     min--
+      //   }
+      //   array[min] = current
+      // }
+
+      // 数组前面为有序数组，后面的元素按顺序插入到前面的有序数组中
       for (let i = 1; i < length; i++) {
-        const current = array[i];
-        let min = i;
-        // 1. 最开始的局部有序数组其实就是 第一个数据
-        // 2. 如果大于有序序列的某值, 我们需要将有序序列中的值进行右移
-        while (array[min - 1] > current && min > 0) {
-          array[min] = array[min - 1];
-          min--
+        let cur = array[i];
+        let location = i;
+        while (array[location - 1] > cur && location > 0) {
+          array[location] = array[location - 1];
+          location--
         }
-        array[min] = current
+        array[location] = cur
       }
     }
     let testArr = [15, 23, 12, 24, 12, 9, 8, 56, 12, 12, 45];

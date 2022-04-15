@@ -14,29 +14,38 @@
       let length = array.length;
 
       // 排序算法的思路在于: 相邻两个数据进行比较, 将较大的数据排在后面
-      // 第一次遍历后在讲数组中最大的数据放在最后
+      // 第一次遍历后会将数组中最大的数据放在最后
       // 知道最后一次只剩下最小值
       // 冒泡排序的比较复杂度为 O(n²)
       // 交换复杂度为O(n²)
+      // for (let i = length - 1; i >= 0; i--) {
+      //   for (let j = 0; j < i; j++) {
+      //     if (array[j] > array[j + 1]) {
+      //       // ** 数组的解构方法
+      //       [array[j], array[j + 1]] = [array[j + 1], array[j]];
+
+      //       // ** 下面是最容易理解的数组位置调换方法
+      //       // let temp = array[j];
+      //       // array[j] = array[j + 1];
+      //       // array[j + 1] = temp;
+      //     }
+      //   }
+      // }
+      // return array
+
       for (let i = length - 1; i >= 0; i--) {
         for (let j = 0; j < i; j++) {
           if (array[j] > array[j + 1]) {
-            // ** 数组的解构方法
-            [array[j], array[j + 1]] = [array[j + 1], array[j]];
-
-            // ** 下面是最容易理解的数组位置调换方法
-            // let temp = array[j];
-            // array[j] = array[j + 1];
-            // array[j + 1] = temp;
+            [array[j], array[j + 1]] = [array[j + 1], array[j]]
           }
         }
       }
-      return array
+      // return array
     }
 
     let testArr = [15, 23, 12, 24, 12, 9, 8, 56, 12, 12, 45];
-    let result = bubbleSort(testArr)
-    console.log(result);
+    bubbleSort(testArr)
+    console.log(testArr);
 
 
 
